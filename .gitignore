@@ -4,11 +4,26 @@ logs
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+<<<<<<< HEAD
 lerna-debug.log*
 .pnpm-debug.log*
 
 # Diagnostic reports (https://nodejs.org/api/report.html)
 report.[0-9]*.[0-9]*.[0-9]*.[0-9]*.json
+=======
+firebase-debug.log*
+firebase-debug.*.log*
+
+# Firebase cache
+.firebase/
+
+# Firebase config
+
+# Uncomment this if you'd like others to create their own Firebase project.
+# For a team working on the same Firebase project(s), it is recommended to leave
+# it commented so all members can deploy to the same project(s) in .firebaserc.
+# .firebaserc
+>>>>>>> 31d2dbf (initial commit)
 
 # Runtime data
 pids
@@ -21,12 +36,19 @@ lib-cov
 
 # Coverage directory used by tools like istanbul
 coverage
+<<<<<<< HEAD
 *.lcov
+=======
+>>>>>>> 31d2dbf (initial commit)
 
 # nyc test coverage
 .nyc_output
 
+<<<<<<< HEAD
 # Grunt intermediate storage (https://gruntjs.com/creating-plugins#storing-task-files)
+=======
+# Grunt intermediate storage (http://gruntjs.com/creating-plugins#storing-task-files)
+>>>>>>> 31d2dbf (initial commit)
 .grunt
 
 # Bower dependency directory (https://bower.io/)
@@ -35,11 +57,16 @@ bower_components
 # node-waf configuration
 .lock-wscript
 
+<<<<<<< HEAD
 # Compiled binary addons (https://nodejs.org/api/addons.html)
+=======
+# Compiled binary addons (http://nodejs.org/api/addons.html)
+>>>>>>> 31d2dbf (initial commit)
 build/Release
 
 # Dependency directories
 node_modules/
+<<<<<<< HEAD
 jspm_packages/
 
 # Snowpack dependency directory (https://snowpack.dev/)
@@ -47,6 +74,8 @@ web_modules/
 
 # TypeScript cache
 *.tsbuildinfo
+=======
+>>>>>>> 31d2dbf (initial commit)
 
 # Optional npm cache directory
 .npm
@@ -54,6 +83,7 @@ web_modules/
 # Optional eslint cache
 .eslintcache
 
+<<<<<<< HEAD
 # Optional stylelint cache
 .stylelintcache
 
@@ -63,6 +93,8 @@ web_modules/
 .rts2_cache_es/
 .rts2_cache_umd/
 
+=======
+>>>>>>> 31d2dbf (initial commit)
 # Optional REPL history
 .node_repl_history
 
@@ -72,6 +104,7 @@ web_modules/
 # Yarn Integrity file
 .yarn-integrity
 
+<<<<<<< HEAD
 # dotenv environment variable files
 .env
 .env.development.local
@@ -128,3 +161,10 @@ dist
 .yarn/build-state.yml
 .yarn/install-state.gz
 .pnp.*
+=======
+# dotenv environment variables file
+.env
+
+# dataconnect generated files
+.dataconnect
+>>>>>>> 31d2dbf (initial commit)
