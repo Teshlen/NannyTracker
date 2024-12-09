@@ -16,6 +16,22 @@ const db = getFirestore(app);
 // State variable for the current date
 let currentDate = new Date();
 
+// Predefined Public Holidays
+const publicHolidays = [
+    { date: "2024-01-01", name: "New Year's Day" },
+    { date: "2024-03-21", name: "Human Rights Day" },
+    { date: "2024-03-29", name: "Good Friday" },
+    { date: "2024-04-01", name: "Family Day" },
+    { date: "2024-04-27", name: "Freedom Day" },
+    { date: "2024-05-01", name: "Workers' Day" },
+    { date: "2024-06-16", name: "Youth Day" },
+    { date: "2024-08-09", name: "Women's Day" },
+    { date: "2024-09-24", name: "Heritage Day" },
+    { date: "2024-12-16", name: "Day of Reconciliation" },
+    { date: "2024-12-25", name: "Christmas Day" },
+    { date: "2024-12-26", name: "Day of Goodwill" },
+];
+
 // Function to Generate Calendar
 async function generateCalendar() {
     const calendar = document.getElementById("calendar");
@@ -59,6 +75,13 @@ async function generateCalendar() {
         const dayOfWeek = new Date(year, month, day).getDay();
         if (dayOfWeek === 0 || dayOfWeek === 6) {
             dayCell.classList.add("weekend");
+        }
+
+        // Highlight public holidays
+        const publicHoliday = publicHolidays.find((holiday) => holiday.date === dateStr);
+        if (publicHoliday) {
+            dayCell.classList.add("public-holiday");
+            dayCell.title = publicHoliday.name; // Tooltip with holiday name
         }
 
         // Highlight leave days

@@ -83,6 +83,18 @@ h2 {
     font-weight: bold;
 }
 
+.calendar-cell.public-holiday {
+    background-color: #FF6347; /* Tomato Red */
+    color: white;
+    font-weight: bold;
+    border: 2px solid #FF4500; /* Darker red border */
+    cursor: default;
+}
+
+.calendar-cell.public-holiday:hover {
+    background-color: #FF4500;
+}
+
 .calendar-cell.empty {
     background-color: transparent;
     border: none;
@@ -134,17 +146,4 @@ form button {
 
 form button:hover {
     background-color: #0056b3;
-}
-
-/* Public Holiday Styling */
-.calendar-cell.public-holiday {
-    background-color: #FF6347; /* Tomato Red */
-    color: white;
-    font-weight: bold;
-    border: 2px solid #FF4500; /* Darker red border */
-    cursor: default;
-}
-
-.calendar-cell.public-holiday:hover {
-    background-color: #FF4500;
 }
