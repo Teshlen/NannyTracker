@@ -7,6 +7,17 @@
 <body>
     <h1>Nanny Tracker</h1>
     <div id="calendar"></div>
-    <script src="app.js"></script>
+
+    <!-- Leave Booking Form -->
+    <h2>Book Leave</h2>
+    <form id="leave-form">
+        <label for="leave-date">Leave Date:</label>
+        <input type="date" id="leave-date" required><br><br>
+        <label for="leave-reason">Reason:</label>
+        <input type="text" id="leave-reason" placeholder="Reason for leave" required><br><br>
+        <button type="submit">Book Leave</button>
+    </form>
+
+    <script src="app.js" type="module"></script>
 </body>
 </html>
