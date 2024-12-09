@@ -4,7 +4,7 @@ import { getFirestore, collection, addDoc, getDocs } from "https://www.gstatic.c
 
 // Firebase Configuration
 const firebaseConfig = {
-    apiKey: "YOUR_API_KEY", // Replace with your actual API key
+    apiKey: "YOUR_API_KEY", // Replace with your API key
     authDomain: "nannytracker-e0441.firebaseapp.com",
     projectId: "nannytracker-e0441",
 };
@@ -13,61 +13,108 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
-// Function to Generate the Calendar
+// State variable for the current date
+let currentDate = new Date();
+
+// Function to Generate Calendar
 async function generateCalendar() {
     const calendar = document.getElementById("calendar");
-    calendar.innerHTML = ""; // Clear any previous content
+    calendar.innerHTML = ""; // Clear previous calendar
+
+    const month = currentDate.getMonth();
+    const year = currentDate.getFullYear();
+
+    // Display current month and year
+    document.getElementById("month-year").textContent = `${currentDate.toLocaleString("default", { month: "long" })} ${year}`;
+
+    const firstDay = new Date(year, month, 1).getDay(); // Day of the week (0-6)
+    const daysInMonth = new Date(year, month + 1, 0).getDate(); // Total days in the month
 
     // Fetch leave records from Firestore
     const leaveRecords = [];
     try {
         const querySnapshot = await getDocs(collection(db, "leaveRecords"));
         querySnapshot.forEach((doc) => {
-            leaveRecords.push(doc.data());
+            leaveRecords.push({ id: doc.id, ...doc.data() });
         });
     } catch (error) {
         console.error("Error fetching leave records:", error);
     }
 
-    // Placeholder for the current month (December 2024)
-    const daysInMonth = 31;
+    // Generate empty cells for days before the first day of the month
+    for (let i = 0; i < firstDay; i++) {
+        const emptyCell = document.createElement("div");
+        emptyCell.classList.add("calendar-cell", "empty");
+        calendar.appendChild(emptyCell);
+    }
+
+    // Generate cells for each day of the month
     for (let day = 1; day <= daysInMonth; day++) {
-        const dayDiv = document.createElement("div");
-        dayDiv.style.display = "inline-block";
-        dayDiv.style.width = "50px";
-        dayDiv.style.height = "50px";
-        dayDiv.style.lineHeight = "50px";
-        dayDiv.style.margin = "5px";
-        dayDiv.style.border = "1px solid #ddd";
-        dayDiv.style.textAlign = "center";
+        const dateStr = `${year}-${(month + 1).toString().padStart(2, "0")}-${day.toString().padStart(2, "0")}`;
+        const dayCell = document.createElement("div");
+        dayCell.classList.add("calendar-cell");
+        dayCell.textContent = day;
 
-        // Format the day as YYYY-MM-DD
-        const dateStr = `2024-12-${day.toString().padStart(2, "0")}`;
-        dayDiv.textContent = day;
-
-        // Highlight if it's a booked leave day
-        const isLeaveDay = leaveRecords.some((record) => record.date === dateStr);
-        if (isLeaveDay) {
-            dayDiv.style.backgroundColor = "#f0a500"; // Highlight color
-            dayDiv.style.color = "white";
+        // Highlight weekends
+        const dayOfWeek = new Date(year, month, day).getDay();
+        if (dayOfWeek === 0 || dayOfWeek === 6) {
+            dayCell.classList.add("weekend");
         }
 
-        calendar.appendChild(dayDiv);
+        // Highlight leave days
+        leaveRecords.forEach((record) => {
+            const fromDate = new Date(record.from);
+            const toDate = new Date(record.to);
+
+            for (let d = new Date(fromDate); d <= toDate; d.setDate(d.getDate() + 1)) {
+                const rangeDateStr = `${d.getFullYear()}-${(d.getMonth() + 1).toString().padStart(2, "0")}-${d.getDate().toString().padStart(2, "0")}`;
+                if (rangeDateStr === dateStr) {
+                    dayCell.classList.add("leave");
+                    dayCell.title = `Reason: ${record.reason}`;
+                }
+            }
+        });
+
+        calendar.appendChild(dayCell);
     }
 }
 
-// Function to Handle Form Submission
+// Handle navigation
+document.getElementById("prev-month").addEventListener("click", () => {
+    currentDate.setMonth(currentDate.getMonth() - 1); // Go to the previous month
+    generateCalendar();
+});
+
+document.getElementById("next-month").addEventListener("click", () => {
+    currentDate.setMonth(currentDate.getMonth() + 1); // Go to the next month
+    generateCalendar();
+});
+
+// Handle Form Submission
 document.getElementById("leave-form").addEventListener("submit", async (event) => {
     event.preventDefault(); // Prevent page refresh
 
     // Get form values
-    const leaveDate = document.getElementById("leave-date").value;
+    const leaveFromDate = document.getElementById("leave-from-date").value;
+    const leaveToDate = document.getElementById("leave-to-date").value;
     const leaveReason = document.getElementById("leave-reason").value;
+
+    // Validate date range
+    if (!leaveFromDate || !leaveToDate || !leaveReason) {
+        alert("All fields are required.");
+        return;
+    }
+
+    if (new Date(leaveFromDate) > new Date(leaveToDate)) {
+        alert("The 'From Date' cannot be after the 'To Date'.");
+        return;
+    }
 
     try {
         // Add leave details to Firestore
         await addDoc(collection(db, "leaveRecords"), {
-            date: leaveDate,
+            from: leaveFromDate,
+            to: leaveToDate,
             reason: leaveReason,
             timestamp: new Date().toISOString(),
         });
@@ -80,5 +127,5 @@ document.getElementById("leave-form").addEventListener("submit", async (event) =
     }
 });
 
-// Generate the calendar on page load
+// Generate calendar on page load
 document.addEventListener("DOMContentLoaded", generateCalendar);
